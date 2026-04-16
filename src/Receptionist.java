@@ -6,7 +6,7 @@ public class Receptionist extends Staff {
     
     public Receptionist(String username, String password,
                         LocalDate dateOfBirth, int workingHours) {
-        // calls the Staff constructor, role is fixed to RECEPTIONIST
+       
         super(username, password, dateOfBirth, Role.RECEPTIONIST, workingHours);
     }
 
@@ -15,11 +15,10 @@ public class Receptionist extends Staff {
         System.out.println("Receptionist " + getUsername() + " is managing check-ins and check-outs.");
     }
 
-    // ── Check-In ──────────────────────────────────────
     public void checkIn(Reservation reservation) {
-        // Checks if the reservation is PENDING (just created by guest)
+      
         if (reservation.getStatus() == Reservation.ReservationStatus.PENDING) {
-            reservation.confirm(); // Uses your new confirm() method
+            reservation.confirm(); 
             System.out.println("Receptionist " + getUsername() +
                     " checked in guest for reservation ID: " + reservation.getReservationId());
         } else {

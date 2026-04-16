@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class Reservation {
-    // Exactly as requested: PENDING, CONFIRMED, CANCELLED
+  
     public enum ReservationStatus {
         PENDING, CONFIRMED, CANCELLED
     }
@@ -37,7 +37,6 @@ public class Reservation {
     public void cancel() {
         this.status = ReservationStatus.CANCELLED;
         room.setAvailable(true); 
-        // Refunds the guest directly to their wallet
         guest.topUpBalance(room.getPrice());
         System.out.println("Reservation " + reservationId + " CANCELLED. Room is available.");
         System.out.println("REFUND ISSUED: $" + room.getPrice() + " returned to your wallet.");

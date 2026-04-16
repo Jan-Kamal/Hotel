@@ -15,7 +15,6 @@ public abstract class Staff {
     private Role role;
     private int workingHours;
  
-    // ── Constructor ───────────────────────────────────
     public Staff(String username, String password, LocalDate dateOfBirth,
                  Role role, int workingHours) {
         this.username = username;
