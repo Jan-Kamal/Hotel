@@ -1,16 +1,14 @@
 import java.time.LocalDate;
  
-// ══════════════════════════════════════════════════════
-//  PARENT CLASS — Admin and Receptionist both extend this
-// ══════════════════════════════════════════════════════
+
 public abstract class Staff {
  
-    // ── Enum ──────────────────────────────────────────
+   
     public enum Role {
         ADMIN, RECEPTIONIST
     }
  
-    // ── Attributes ────────────────────────────────────
+ 
     private String username;
     private String password;
     private LocalDate dateOfBirth;
@@ -27,7 +25,7 @@ public abstract class Staff {
         this.workingHours = workingHours;
     }
  
-    // ── Password Validation ───────────────────────────
+
     private String validatePassword(String password) {
         if (password == null || password.length() < 6) {
             throw new IllegalArgumentException("Password must be at least 6 characters.");
@@ -35,21 +33,19 @@ public abstract class Staff {
         return password;
     }
  
-    // ── Shared Behaviors (available to ALL staff) ─────
  
     public void viewAllGuests() {
         System.out.println("[" + role + "] " + username + " is viewing all guests...");
-        // TODO: connect to Guest list in Hotel system
+       
     }
  
     public void viewAllRooms() {
         System.out.println("[" + role + "] " + username + " is viewing all rooms...");
-        // TODO: connect to Room list in Hotel system
+        
     }
  
     public void viewAllReservations() {
         System.out.println("[" + role + "] " + username + " is viewing all reservations...");
-        // TODO: connect to Reservation list in Hotel system
     }
  
     public boolean login(String username, String password) {
@@ -61,10 +57,9 @@ public abstract class Staff {
         return false;
     }
  
-    // ── Abstract method — each subclass MUST implement ─
     public abstract void performDuties();
  
-    // ── Getters & Setters ─────────────────────────────
+
     public String getUsername()              { return username; }
     public void setUsername(String u)        { this.username = u; }
  

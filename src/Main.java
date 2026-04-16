@@ -64,6 +64,7 @@ public class Main {
                             autoReserved = true;
                         } else {
                             System.out.println("Match found, but insufficient funds to auto-reserve.");
+                            continue;
                         }
                         break;
                     }
@@ -221,9 +222,9 @@ public class Main {
 
         while (true) {
             System.out.println("\n--- Receptionist Menu ---");
-            System.out.println("1. Check-In Guest (Confirm Reservation)\n2. View All Reservations\n3. Logout");
+            System.out.println("1. Check-In Guest (Confirm Reservation)\n2. View All Reservations\n3.CheckOut\n4. Logout");
             int act = scanner.nextInt(); scanner.nextLine();
-            if (act == 3) break;
+            if (act == 4) break;
 
             if (act == 1) {
                 System.out.print("Enter Reservation ID to Check-In: ");
@@ -239,7 +240,31 @@ public class Main {
                 for (Reservation res : HotelDatabase.reservations) {
                     System.out.println(res);
                 }
+            
+            }
+            else if(act == 3){
+                System.out.print("Enter Reservation ID to Check-Out: ");
+            String id = scanner.nextLine();
+            
+            Reservation foundRes = null;
+            for (Reservation res : HotelDatabase.reservations) {
+                if (res.getReservationId().equals(id)) {
+                    foundRes = res;
+                    break;
+                }
+                
+                }
+                if(foundRes!=null)
+                {
+                    currentRec.checkOut(foundRes);
+                    HotelDatabase.reservations.remove(foundRes);
+                    System.out.println("Guest has successfully departed.");
+                    } 
+                    else {
+                    System.out.println("Error: Reservation ID not found.");
+                 }
+                }
+
             }
         }
     }
-}

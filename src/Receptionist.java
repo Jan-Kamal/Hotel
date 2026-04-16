@@ -27,17 +27,11 @@ public class Receptionist extends Staff {
         }
     }
 
-    // ── Check-Out ─────────────────────────────────────
-    public void checkOut(Reservation reservation, double amountDue) {
-        System.out.println("Receptionist " + getUsername() +
-                " is checking out guest. Amount due: $" + amountDue);
-        
-        if (amountDue > 0) {
-            reservation.getGuest().deductBalance(amountDue);
-        }
-        
-        // Since we removed COMPLETED, checking out simply frees the room
-        reservation.getRoom().setAvailable(true);
-        System.out.println("Check-out complete for reservation ID: " + reservation.getReservationId() + ". Room is now available.");
+public void checkOut(Reservation reservation) {
+    System.out.println("Receptionist " + getUsername() +
+            " is checking out guest: " + reservation.getGuest().getUsername());
+    reservation.getRoom().setAvailable(true);
+    
+    System.out.println("Check-out complete for ID: " + reservation.getReservationId());
     }
 }
