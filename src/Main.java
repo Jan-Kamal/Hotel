@@ -29,7 +29,11 @@ public class Main {
                  System.out.print("Password: ");
                  String pass = scanner.nextLine();
                 handleGuest(user, pass, scanner);}
-            if(choice==2) HotelDatabase.registerNewGuest(scanner);
+            if(choice==2) try {HotelDatabase.registerNewGuest(scanner);}
+            catch(IllegalArgumentException e){
+                System.out.println("\n[ERROR]: " + e.getMessage());
+                 System.out.println("Please try registering again with a valid password.");
+            }
             else if (choice == 3)
                 { 
                     System.out.print("Username: ");
@@ -86,16 +90,16 @@ public class Main {
                                          (pChoice == 2) ? Invoice.PaymentMethod.CREDIT_CARD : 
                                          Invoice.PaymentMethod.ONLINE;
 
-                // DEDUCTING FROM SHARED BALANCE
+                
                 currentGuest.deductBalance(r.getPrice());
 
-                // CREATING INVOICE AND RESERVATION
+                
                 Invoice inv = new Invoice(r.getPrice(), m);
                 Reservation res = new Reservation(currentGuest, r, LocalDate.now(), LocalDate.now().plusDays(2));
                 HotelDatabase.reservations.add(res);
                 
                 System.out.println("AUTO-RESERVED! New Balance: $" + currentGuest.getBalance());
-                inv.printReceipt(); // PRINT THE RECEIPT
+                inv.printReceipt();
                 
                 autoReserved = true;
             } else {
@@ -106,7 +110,6 @@ public class Main {
         }
     }
 
-    // --- 2. MANUAL RESERVE SECTION ---
     if (!autoReserved) {
         System.out.println("\nNo exact match could be auto-reserved. Available options:");
         for (Room r : HotelDatabase.rooms) {
