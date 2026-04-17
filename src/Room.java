@@ -12,9 +12,12 @@ public class Room {
         this.viewPreference = viewPreference;
         this.isAvailable = true;
     }
-
+    public void setPrice(double price)
+    {    
+    this.price = price;
+    }
     public double getPrice() { return price; }
-    public String getRoomNumber() { return roomNumber; }
+   public String getRoomNumber() { return roomNumber; }
     public RoomType getRoomType() { return roomType; }
     public boolean isAvailable() { return isAvailable; }
     public void setAvailable(boolean status) { this.isAvailable = status; }
@@ -24,4 +27,7 @@ public class Room {
     public String toString() {
         return "Room " + roomNumber + " [" + roomType.getTypeName() + " | View: " + viewPreference + "] - Price: $" + price + "\n   Base Amenities: " + roomType.getBaseAmenities();
     }
+        public void setRoomType(RoomType roomType) {
+    this.roomType = roomType;
+}
 }

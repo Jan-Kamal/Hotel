@@ -64,15 +64,6 @@ public class Guest {
         
     }
 
-
-    public void viewReservations() {
-        System.out.println(username + "'s reservations:");
-    }
-
-    public void cancelReservation(String reservationId) {
-        System.out.println(username + " cancelled reservation: " + reservationId); 
-    }
-
     
    public boolean canAfford(double amount) {
         return this.balance >= amount;
@@ -125,4 +116,5 @@ public class Guest {
                 ", roomPreferences=" + roomPreferences +
                 '}';
     }
+    
 }

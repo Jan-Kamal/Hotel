@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class HotelDatabase {
     public static ArrayList<Guest> guests = new ArrayList<>();
@@ -19,4 +20,29 @@ public class HotelDatabase {
 
         receptionists.add(new Receptionist("staff_john", "staff123", LocalDate.of(1995, 5, 10), 8));
 }
+
+public static void registerNewGuest(Scanner scanner) {
+    System.out.println("Please enter your name:");
+    String name = scanner.nextLine();
+
+    System.out.println("Enter your password:");
+    String p = scanner.nextLine();
+
+    System.out.println("Your Initial Balance:");
+    double bal = scanner.nextDouble();
+    scanner.nextLine();
+
+    System.out.println("Address:");
+    String addr = scanner.nextLine();
+
+   
+    Guest newGuest = Guest.register(name, p, java.time.LocalDate.now(), bal, addr, Guest.Gender.MALE);
+    
+    
+    guests.add(newGuest);
+    
+    System.out.println("System: Guest added to database successfully.");
+    
 }
+}
+
