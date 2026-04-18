@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -65,7 +66,7 @@ public class Main {
 
             if (act == 5) break;
 
-            if (act == 1) { 
+         
                if (act == 1) { 
     System.out.print("Preferred Room Type (e.g., Suite, Single): ");
     String typePref = scanner.nextLine();
@@ -147,7 +148,45 @@ public class Main {
         }
     }
 }
-            } else if (act == 3) { 
+else if (act == 2) { // View and Cancel Reservations
+    if (HotelDatabase.reservations.isEmpty()) {
+        System.out.println("No reservations found in the system.");
+    } else {
+        // 1. Filter the reservations for the current guest
+        ArrayList<Reservation> myRes = new ArrayList<>();
+        for (Reservation res : HotelDatabase.reservations) {
+            if (res.getGuest().equals(currentGuest)) {
+                myRes.add(res);
+            }
+        }
+
+        if (myRes.isEmpty()) {
+            System.out.println("You have no active reservations.");
+        } else {
+            // 2. Display the list
+            System.out.println("\n--- Your Reservations ---");
+            for (int i = 0; i < myRes.size(); i++) {
+                System.out.println((i + 1) + ". " + myRes.get(i).toString());
+            }
+
+            // 3. The Cancel part
+            System.out.print("\nEnter number to CANCEL (or 0 to go back): ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Buffer clear
+
+            if (choice > 0 && choice <= myRes.size()) {
+                Reservation toCancel = myRes.get(choice - 1);
+                
+                // Triggers your specific logic: refund, status change, and availability
+                toCancel.cancel();
+                
+                // Remove it from the master database
+                HotelDatabase.reservations.remove(toCancel);
+            }
+        }
+    }
+}
+             else if (act == 3) { 
                 System.out.print("Enter amount to add: ");
                 double amount = scanner.nextDouble(); scanner.nextLine();
                 currentGuest.topUpBalance(amount);
@@ -204,9 +243,9 @@ public class Main {
 
         while (true) {
             System.out.println("\n--- Admin Menu ---");
-            System.out.println("1. Create Room Type\n2. Create Room (With Price & View)\n3. View All Data (Includes Reservations)\n4.Update room Price \n5.Delete Room \n6.Update RoomType \n7. Logout");
+            System.out.println("1. Create Room Type\n2. Create Room (With Price & View)\n3. View All Data (Includes Reservations)\n4.Update room Price \n5.Delete Room \n6.Update RoomType \n7.assigen amenities to rooms\n8.create amenity \n9.update amenity\n10.Delete amenity \n0. Logout");
             int act = scanner.nextInt(); scanner.nextLine();
-            if (act == 7) return;
+            if (act == 0) return;
 
             if (act == 1) {
                 System.out.print("New Room Type Name (e.g., Suite, Single): ");
@@ -277,6 +316,18 @@ public class Main {
         }
             else if (act==6){
                 currentAdmin.handleRoomTypeUpdate(scanner);
+            }
+            else if (act == 7) { 
+                currentAdmin.linkAmenityToRoom(scanner); 
+                }
+                else if (act == 8) { // Create
+                    currentAdmin.createAmenity(scanner);
+        }
+        else if (act == 9) { // Update
+            currentAdmin.updateAmenity(scanner);
+        }
+        else if (act == 10) { // Delete
+                currentAdmin.deleteAmenity(scanner);
             }
         }
     }

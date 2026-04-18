@@ -35,7 +35,7 @@ public void viewAllData() {
         }
     }
 
-    // 2. VIEW ALL ROOMS
+    
     System.out.println("\n--- HOTEL ROOMS ---");
     if (HotelDatabase.rooms.isEmpty()) {
         System.out.println("No rooms created yet.");
@@ -46,7 +46,7 @@ public void viewAllData() {
         }
     }
 
-    // 3. VIEW ALL RESERVATIONS
+   
     System.out.println("\n--- ACTIVE RESERVATIONS ---");
     if (HotelDatabase.reservations.isEmpty()) {
         System.out.println("No reservations made yet.");
@@ -148,6 +148,112 @@ public void handleRoomTypeUpdate(Scanner scanner) {
         System.out.println("Success: Room " + rNum + " is now a " + selectedType.getTypeName());
     } else {
         System.out.println("Error: That Room Type does not exist!");
+    }
+}
+public void linkAmenityToRoom(Scanner sc) {
+    
+    if (HotelDatabase.rooms.isEmpty()) {
+        System.out.println("Error: No rooms created yet.");
+        return;
+    }
+    if (HotelDatabase.amenitys.isEmpty()) {
+        System.out.println("Error: No amenities created in the database yet.");
+        return;
+    }
+
+    System.out.print("Enter Room Number to add amenity to: ");
+    String rNum = sc.nextLine();
+    Room selectedRoom = null;
+    for (Room r : HotelDatabase.rooms) {
+        if (r.getRoomNumber().equalsIgnoreCase(rNum)) {
+            selectedRoom = r;
+            break;
+        }
+    }
+
+    if (selectedRoom == null) {
+        System.out.println("Room not found.");
+        return;
+    }
+
+    System.out.println("\n--- Available Amenities ---");
+    for (int i = 0; i < HotelDatabase.amenitys.size(); i++) {
+        System.out.println((i + 1) + ". " + HotelDatabase.amenitys.get(i).getName());
+    }
+
+   System.out.print("Select Amenity number: ");
+if (!sc.hasNextInt()) { sc.next(); return; }
+int choice = sc.nextInt(); sc.nextLine(); 
+
+if (choice > 0 && choice <= HotelDatabase.amenitys.size()) {
+    Amenity chosen = HotelDatabase.amenitys.get(choice - 1);
+    
+    
+    if (selectedRoom.getRoomAmenities().contains(chosen)) {
+        System.out.println("Error: Room " + rNum + " already has " + chosen.getName() + "!");
+    } else {
+        
+        selectedRoom.addAmenity(chosen);
+        System.out.println("Success: " + chosen.getName() + " added to Room " + rNum);
+    }
+}       else  {
+        System.out.println("Invalid selection.");
+    }
+}
+
+public void createAmenity(Scanner sc) {
+    System.out.print("Enter name of the new amenity: ");
+    String name = sc.nextLine();
+    
+    Amenity newAmenity = new Amenity(name);
+    HotelDatabase.amenitys.add(newAmenity);
+    System.out.println("Success: '" + name + "' added to database.");
+}
+
+
+public void updateAmenity(Scanner sc) {
+    if (HotelDatabase.amenitys.isEmpty()) {
+        System.out.println("No amenities found to update.");
+        return;
+    }
+
+    // Show list for selection
+    for (int i = 0; i < HotelDatabase.amenitys.size(); i++) {
+        System.out.println((i + 1) + ". " + HotelDatabase.amenitys.get(i).getName());
+    }
+
+    System.out.print("Select amenity number to rename: ");
+    int choice = sc.nextInt(); sc.nextLine();
+
+    if (choice > 0 && choice <= HotelDatabase.amenitys.size()) {
+        System.out.print("Enter the NEW name: ");
+        String newName = sc.nextLine();
+        
+        HotelDatabase.amenitys.get(choice - 1).setName(newName);
+        System.out.println("Success: Amenity updated.");
+    } else {
+        System.out.println("Invalid choice.");
+    }
+}
+
+public void deleteAmenity(Scanner sc) {
+    if (HotelDatabase.amenitys.isEmpty()) {
+        System.out.println("No amenities found to delete.");
+        return;
+    }
+
+    for (int i = 0; i < HotelDatabase.amenitys.size(); i++) {
+        System.out.println((i + 1) + ". " + HotelDatabase.amenitys.get(i).getName());
+    }
+
+    System.out.print("Select amenity number to DELETE: ");
+    int choice = sc.nextInt(); sc.nextLine();
+
+    if (choice > 0 && choice <= HotelDatabase.amenitys.size()) {
+        Amenity removed = HotelDatabase.amenitys.remove(choice - 1);
+        System.out.println("Success: '" + removed.getName() + "' removed from system.");
+    } else {
+        System.out.println("Invalid choice.");
     }
 }
 }

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Room {
     private String roomNumber;
     private RoomType roomType;
@@ -30,4 +32,12 @@ public class Room {
         public void setRoomType(RoomType roomType) {
     this.roomType = roomType;
 }
+private ArrayList<Amenity> roomAmenities = new ArrayList<>();
+public void addAmenity(Amenity a) {
+        this.roomAmenities.add(a);
+    }
+
+    public ArrayList<Amenity> getRoomAmenities() {
+        return roomAmenities;
+    }
 }

@@ -9,6 +9,7 @@ public class HotelDatabase {
     public static ArrayList<Room> rooms = new ArrayList<>(); 
     public static ArrayList<Reservation> reservations = new ArrayList<>();
     public static ArrayList<RoomType> roomTypes = new ArrayList<>();
+    public static ArrayList<Amenity>amenitys = new ArrayList<>();
 
     public static void initializeData() {
        
