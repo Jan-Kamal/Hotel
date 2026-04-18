@@ -10,14 +10,18 @@ public class Room {
     public Room(String roomNumber, RoomType roomType, double price, String viewPreference) {
         this.roomNumber = roomNumber;
         this.roomType = roomType;
-        this.price = price;
+        setPrice(price);
         this.viewPreference = viewPreference;
         this.isAvailable = true;
     }
-    public void setPrice(double price)
-    {    
-    this.price = price;
+    public void setPrice(double price) {     
+    if (price >= 0) { 
+        this.price = price;
+    } else {
+        
+        throw new IllegalArgumentException("Invalid Input: Price cannot be negative (" + price + ")");
     }
+}
     public double getPrice() { return price; }
    public String getRoomNumber() { return roomNumber; }
     public RoomType getRoomType() { return roomType; }

@@ -2,7 +2,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Guest {
+public class Guest  {
 
     public enum Gender {
         MALE, FEMALE

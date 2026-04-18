@@ -75,33 +75,43 @@ public class Main {
 
     boolean autoReserved = false;
     
-    // --- 1. AUTO-RESERVE SECTION ---
     for (Room r : HotelDatabase.rooms) {
         if (r.isAvailable() && 
             r.getRoomType().getTypeName().equalsIgnoreCase(typePref) && 
             r.getViewPreference().equalsIgnoreCase(viewPref)) {
             
             System.out.println("\n>>> PERFECT MATCH FOUND! <<<");
+            
             if (currentGuest.canAfford(r.getPrice())) {
-                
-                // ASKING FOR PAYMENT METHOD
+                // 1. Get Payment Method
                 System.out.println("Select Payment Method: 1.CASH 2.CREDIT_CARD 3.ONLINE");
                 int pChoice = scanner.nextInt(); scanner.nextLine();
                 Invoice.PaymentMethod m = (pChoice == 1) ? Invoice.PaymentMethod.CASH : 
                                          (pChoice == 2) ? Invoice.PaymentMethod.CREDIT_CARD : 
                                          Invoice.PaymentMethod.ONLINE;
 
-                
-                currentGuest.deductBalance(r.getPrice());
+                // 2. Get the DATES from the user BEFORE creating the reservation
+                String checkIn = Receptionist.askForDate("Check In", scanner);
+                String checkOut = Receptionist.askForDate("Check Out", scanner);
 
-                
+                // 3. Deduct balance and create Invoice
+                currentGuest.deductBalance(r.getPrice());
                 Invoice inv = new Invoice(r.getPrice(), m);
-                Reservation res = new Reservation(currentGuest, r, LocalDate.now(), LocalDate.now().plusDays(2));
+
+                // 4. Create the Reservation with the REAL dates
+                // (Using the strings checkIn and checkOut you just got)
+                 Reservation res = new Reservation(currentGuest, r, LocalDate.parse(checkIn), LocalDate.parse(checkOut));
                 HotelDatabase.reservations.add(res);
                 
-                System.out.println("AUTO-RESERVED! New Balance: $" + currentGuest.getBalance());
-                inv.printReceipt();
+                // 5. Update room status so it's not "Available" anymore
+                r.setAvailable(false); 
                 
+                System.out.println("\n--- Reservation Confirmed ---");
+                System.out.println("Check-In:  " + checkIn);
+                System.out.println("Check-Out: " + checkOut);
+                System.out.println("AUTO-RESERVED! New Balance: $" + currentGuest.getBalance());
+                
+                inv.printReceipt();
                 autoReserved = true;
             } else {
                 System.out.println("Match found, but insufficient funds to auto-reserve.");
@@ -130,13 +140,21 @@ public class Main {
                                              (pChoice == 2) ? Invoice.PaymentMethod.CREDIT_CARD : 
                                              Invoice.PaymentMethod.ONLINE;
 
-                    // DEDUCTING FROM SHARED BALANCE
-                    currentGuest.deductBalance(r.getPrice());
+                     // 2. Get the DATES from the user BEFORE creating the reservation
+                String checkIn = Receptionist.askForDate("Check In", scanner);
+                String checkOut = Receptionist.askForDate("Check Out", scanner);
 
-                    // CREATING INVOICE AND RESERVATION
-                    Invoice inv = new Invoice(r.getPrice(), m);
-                    Reservation res = new Reservation(currentGuest, r, LocalDate.now(), LocalDate.now().plusDays(2));
-                    HotelDatabase.reservations.add(res);
+                // 3. Deduct balance and create Invoice
+                currentGuest.deductBalance(r.getPrice());
+                Invoice inv = new Invoice(r.getPrice(), m);
+
+                // 4. Create the Reservation with the REAL dates
+                // (Using the strings checkIn and checkOut you just got)
+                 Reservation res = new Reservation(currentGuest, r, LocalDate.parse(checkIn), LocalDate.parse(checkOut));
+                HotelDatabase.reservations.add(res);
+                
+                // 5. Update room status so it's not "Available" anymore
+                    r.setAvailable(false); 
                     
                     System.out.println("Manual Reservation success! New Balance: $" + currentGuest.getBalance());
                     inv.printReceipt(); // PRINT THE RECEIPT
@@ -249,40 +267,11 @@ else if (act == 2) { // View and Cancel Reservations
 
             if (act == 1) {
                 System.out.print("New Room Type Name (e.g., Suite, Single): ");
-                HotelDatabase.roomTypes.add(currentAdmin.createRoomType(scanner.nextLine()));
-            } else if (act == 2) {
-                if (HotelDatabase.roomTypes.isEmpty()) {
-                    System.out.println("Error: Create a Room Type first!"); continue;
-                }
-
-                System.out.print("Room Number: ");
-                String num = scanner.nextLine();
                 
-                boolean exists = false;
-                for (Room r : HotelDatabase.rooms) {
-                    if (r.getRoomNumber().equalsIgnoreCase(num)) { exists = true; break; }
-                }
-                if (exists) { System.out.println("Error: Room " + num + " already exists!"); continue; }
+                HotelDatabase.roomTypes.add(currentAdmin.createRoomType(scanner.nextLine()));
+            }else if (act == 2) {
+            currentAdmin.createRoom(scanner);
 
-                System.out.print("Set Room Price: ");
-                double price = scanner.nextDouble(); scanner.nextLine();
-
-                System.out.print("Set Room View (e.g., Sea View, Pool View): ");
-                String view = scanner.nextLine();
-
-                System.out.println("\nSelect Room Type:");
-                for (int i = 0; i < HotelDatabase.roomTypes.size(); i++) {
-                    System.out.println(i + ". " + HotelDatabase.roomTypes.get(i).getTypeName());
-                }
-                System.out.print("Choice: ");
-                int typeChoice = scanner.nextInt(); scanner.nextLine();
-
-                if (typeChoice >= 0 && typeChoice < HotelDatabase.roomTypes.size()) {
-                    RoomType selectedType = HotelDatabase.roomTypes.get(typeChoice);
-                    Room newRoom = new Room(num, selectedType, price, view); 
-                    HotelDatabase.rooms.add(newRoom);
-                    System.out.println("Room " + num + " created!");
-                }
             } else if (act == 3) {
                currentAdmin.viewAllData();
             }

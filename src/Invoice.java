@@ -15,7 +15,7 @@ public class Invoice {
 
     public void printReceipt() {
         System.out.println("\n------- PAYMENT RECEIPT -------");
-        System.out.println("Date: " + date);
+        System.out.println("Check In Date: " + date);
         System.out.println("Total Paid: $" + amount);
         System.out.println("Method Used: " + method);
         System.out.println("Status: COMPLETED");

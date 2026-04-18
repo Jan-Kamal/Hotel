@@ -58,14 +58,24 @@ public void viewAllData() {
     System.out.println("\n======================================");
 }
 public void updateRoomPrice(String roomNum, double newPrice) {
-    for (Room r : HotelDatabase.rooms) {
-        if (r.getRoomNumber().equalsIgnoreCase(roomNum)) {
-            r.setPrice(newPrice);
-            System.out.println("Success: Room " + roomNum + " price updated to $" + newPrice);
-            return;
+    try {
+        for (Room r : HotelDatabase.rooms) {
+            if (r.getRoomNumber().equalsIgnoreCase(roomNum)) {
+                
+                r.setPrice(newPrice);
+                
+            
+                System.out.println("Success: Room " + roomNum + " price updated to $" + newPrice);
+                return;
+            }
         }
+        System.out.println("Error: Room " + roomNum + " not found.");
+
+    } catch (IllegalArgumentException e) {
+        
+        System.out.println("\n>>> UPDATE FAILED: " + e.getMessage());
+        System.out.println("The price for Room " + roomNum + " remains unchanged.");
     }
-    System.out.println("Error: Room not found.");
 }
 
 public void deleteRoom(String roomNum) {
@@ -256,4 +266,54 @@ public void deleteAmenity(Scanner sc) {
         System.out.println("Invalid choice.");
     }
 }
+public void createRoom(Scanner scanner) {
+        if (HotelDatabase.roomTypes.isEmpty()) {
+            System.out.println("Error: Create a Room Type first!");
+            return;
+        }
+
+        System.out.print("Room Number: ");
+        String num = scanner.nextLine();
+
+        // Check if room exists [cite: 73]
+        for (Room r : HotelDatabase.rooms) {
+            if (r.getRoomNumber().equalsIgnoreCase(num)) {
+                System.out.println("Error: Room " + num + " already exists!");
+                return;
+            }
+        }
+
+        try {
+            System.out.print("Set Room Price: ");
+            double price = scanner.nextDouble(); scanner.nextLine();
+
+            System.out.print("Set Room View (e.g., Sea View, Pool View): ");
+            String view = scanner.nextLine();
+
+            System.out.println("\nSelect Room Type:");
+            for (int i = 0; i < HotelDatabase.roomTypes.size(); i++) {
+                System.out.println(i + ". " + HotelDatabase.roomTypes.get(i).getTypeName());
+            }
+            System.out.print("Choice: ");
+            int typeChoice = scanner.nextInt(); scanner.nextLine();
+
+            if (typeChoice >= 0 && typeChoice < HotelDatabase.roomTypes.size()) {
+                RoomType selectedType = HotelDatabase.roomTypes.get(typeChoice);
+                
+                // This triggers validation in the Room setter 
+                Room newRoom = new Room(num, selectedType, price, view); 
+                
+                HotelDatabase.rooms.add(newRoom);
+                System.out.println("Room " + num + " created successfully!");
+            } else {
+                System.out.println("Invalid Room Type selection.");
+            }
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("\n>>> VALIDATION ERROR: " + e.getMessage());
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("\n>>> ERROR: Invalid numeric input.");
+            scanner.nextLine(); 
+        }
+    }
 }
