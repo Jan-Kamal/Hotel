@@ -31,8 +31,7 @@ public void viewAllData() {
         System.out.println("No guests registered yet.");
     } else {
         for (Guest g : HotelDatabase.guests) {
-            System.out.println("Name: " + g.getUsername() + " | Balance: $" + g.getBalance() + " | Address: " + g.getAddress());
-        }
+           System.out.println(g);
     }
 
     
@@ -41,8 +40,7 @@ public void viewAllData() {
         System.out.println("No rooms created yet.");
     } else {
         for (Room r : HotelDatabase.rooms) {
-            System.out.println("Room #" + r.getRoomNumber() + " | Type: " + r.getRoomType().getTypeName() + 
-                               " | Price: $" + r.getPrice() + " | Status: " + (r.isAvailable() ? "Available" : "Occupied"));
+          System.out.println(r);
         }
     }
 
@@ -54,9 +52,10 @@ public void viewAllData() {
         for (Reservation res : HotelDatabase.reservations) {
             System.out.println(res); // This uses the toString() you already have in Reservation
         }
-    }
-    System.out.println("\n======================================");
+    }       
 }
+}
+
 public void updateRoomPrice(String roomNum, double newPrice) {
     try {
         for (Room r : HotelDatabase.rooms) {

@@ -30,9 +30,10 @@ public class Room {
     public String getViewPreference() { return viewPreference; }
 
     @Override
-    public String toString() {
-        return "Room " + roomNumber + " [" + roomType.getTypeName() + " | View: " + viewPreference + "] - Price: $" + price + "\n   Base Amenities: " + roomType.getBaseAmenities();
-    }
+public String toString() {
+    return "Room " + roomNumber + " [" + roomType.getTypeName() + " | View: " + viewPreference + "] - Price: $" + price + 
+           "\n   Amenities: " + (roomAmenities.isEmpty() ? "None" : roomAmenities); 
+}
         public void setRoomType(RoomType roomType) {
     this.roomType = roomType;
 }
