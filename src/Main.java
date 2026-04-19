@@ -73,7 +73,14 @@ public class Main {
     System.out.print("Preferred View (e.g., Sea View, Pool View): ");
     String viewPref = scanner.nextLine();
 
+  
+
+    if (!currentGuest.getRoomPreferences().contains(viewPref)) {
+        currentGuest.getRoomPreferences().add(viewPref);
+    }
+
     boolean autoReserved = false;
+    
     
     for (Room r : HotelDatabase.rooms) {
         if (r.isAvailable() && 
@@ -83,81 +90,83 @@ public class Main {
             System.out.println("\n>>> PERFECT MATCH FOUND! <<<");
             
             if (currentGuest.canAfford(r.getPrice())) {
-                // 1. Get Payment Method
+                // Get Payment Method
                 System.out.println("Select Payment Method: 1.CASH 2.CREDIT_CARD 3.ONLINE");
                 int pChoice = scanner.nextInt(); scanner.nextLine();
                 Invoice.PaymentMethod m = (pChoice == 1) ? Invoice.PaymentMethod.CASH : 
                                          (pChoice == 2) ? Invoice.PaymentMethod.CREDIT_CARD : 
                                          Invoice.PaymentMethod.ONLINE;
 
-                // 2. Get the DATES from the user BEFORE creating the reservation
-                String checkIn = Receptionist.askForDate("Check In", scanner);
-                String checkOut = Receptionist.askForDate("Check Out", scanner);
+                
+                LocalDate checkIn = null;
+                LocalDate checkOut = null;
+                while (true) {
+                    checkIn = LocalDate.parse(Receptionist.askForDate("Check In", scanner));
+                    checkOut = LocalDate.parse(Receptionist.askForDate("Check Out", scanner));
 
-                // 3. Deduct balance and create Invoice
+                    if (checkOut.isAfter(checkIn)) break; 
+                    System.out.println("\n[ERROR]: Check-out must be after Check-in! Try again.");
+                }
+
+                
                 currentGuest.deductBalance(r.getPrice());
                 Invoice inv = new Invoice(r.getPrice(), m);
-
-                // 4. Create the Reservation with the REAL dates
-                // (Using the strings checkIn and checkOut you just got)
-                 Reservation res = new Reservation(currentGuest, r, LocalDate.parse(checkIn), LocalDate.parse(checkOut));
-                HotelDatabase.reservations.add(res);
+                Reservation res = new Reservation(currentGuest, r, checkIn, checkOut);
                 
-                // 5. Update room status so it's not "Available" anymore
+                HotelDatabase.reservations.add(res);
                 r.setAvailable(false); 
                 
-                System.out.println("\n--- Reservation Confirmed ---");
-                System.out.println("Check-In:  " + checkIn);
-                System.out.println("Check-Out: " + checkOut);
-                System.out.println("AUTO-RESERVED! New Balance: $" + currentGuest.getBalance());
-                
+                System.out.println("\n--- AUTO-RESERVATION CONFIRMED ---");
                 inv.printReceipt();
                 autoReserved = true;
             } else {
-                System.out.println("Match found, but insufficient funds to auto-reserve.");
-                continue;
+                System.out.println("Match found, but you have insufficient funds.");
             }
-            break;
+            break; 
         }
     }
 
+    
     if (!autoReserved) {
         System.out.println("\nNo exact match could be auto-reserved. Available options:");
         for (Room r : HotelDatabase.rooms) {
             if (r.isAvailable()) System.out.println(r);
         }
+        
         System.out.print("Enter Room Number to manually reserve (or 'exit'): ");
         String rNum = scanner.nextLine();
-        
+        if (rNum.equalsIgnoreCase("exit")) return;
+
         for (Room r : HotelDatabase.rooms) {
             if (r.getRoomNumber().equalsIgnoreCase(rNum) && r.isAvailable()) {
                 if (currentGuest.canAfford(r.getPrice())) {
                     
-                    // ASKING FOR PAYMENT METHOD
                     System.out.println("Select Payment Method: 1.CASH 2.CREDIT_CARD 3.ONLINE");
                     int pChoice = scanner.nextInt(); scanner.nextLine();
                     Invoice.PaymentMethod m = (pChoice == 1) ? Invoice.PaymentMethod.CASH : 
                                              (pChoice == 2) ? Invoice.PaymentMethod.CREDIT_CARD : 
                                              Invoice.PaymentMethod.ONLINE;
 
-                     // 2. Get the DATES from the user BEFORE creating the reservation
-                String checkIn = Receptionist.askForDate("Check In", scanner);
-                String checkOut = Receptionist.askForDate("Check Out", scanner);
+                    
+                    LocalDate checkIn = null;
+                    LocalDate checkOut = null;
+                    while (true) {
+                        checkIn = LocalDate.parse(Receptionist.askForDate("Check In", scanner));
+                        checkOut = LocalDate.parse(Receptionist.askForDate("Check Out", scanner));
 
-                // 3. Deduct balance and create Invoice
-                currentGuest.deductBalance(r.getPrice());
-                Invoice inv = new Invoice(r.getPrice(), m);
+                        if (checkOut.isAfter(checkIn)) break;
+                        System.out.println("\n[ERROR]: Check-out must be after Check-in! Try again.");
+                    }
 
-                // 4. Create the Reservation with the REAL dates
-                // (Using the strings checkIn and checkOut you just got)
-                 Reservation res = new Reservation(currentGuest, r, LocalDate.parse(checkIn), LocalDate.parse(checkOut));
-                HotelDatabase.reservations.add(res);
-                
-                // 5. Update room status so it's not "Available" anymore
+                    currentGuest.deductBalance(r.getPrice());
+                    Invoice inv = new Invoice(r.getPrice(), m);
+                    Reservation res = new Reservation(currentGuest, r, checkIn, checkOut);
+                    
+                    HotelDatabase.reservations.add(res);
                     r.setAvailable(false); 
                     
-                    System.out.println("Manual Reservation success! New Balance: $" + currentGuest.getBalance());
-                    inv.printReceipt(); // PRINT THE RECEIPT
+                    System.out.println("\n--- MANUAL RESERVATION CONFIRMED ---");
+                    inv.printReceipt();
                 } else {
                     System.out.println("Insufficient funds!");
                 }
@@ -166,11 +175,11 @@ public class Main {
         }
     }
 }
-else if (act == 2) { // View and Cancel Reservations
+else if (act == 2) { 
     if (HotelDatabase.reservations.isEmpty()) {
         System.out.println("No reservations found in the system.");
     } else {
-        // 1. Filter the reservations for the current guest
+        
         ArrayList<Reservation> myRes = new ArrayList<>();
         for (Reservation res : HotelDatabase.reservations) {
             if (res.getGuest().equals(currentGuest)) {
@@ -181,24 +190,24 @@ else if (act == 2) { // View and Cancel Reservations
         if (myRes.isEmpty()) {
             System.out.println("You have no active reservations.");
         } else {
-            // 2. Display the list
+            
             System.out.println("\n--- Your Reservations ---");
             for (int i = 0; i < myRes.size(); i++) {
                 System.out.println((i + 1) + ". " + myRes.get(i).toString());
             }
 
-            // 3. The Cancel part
+            
             System.out.print("\nEnter number to CANCEL (or 0 to go back): ");
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Buffer clear
+            scanner.nextLine(); 
 
             if (choice > 0 && choice <= myRes.size()) {
                 Reservation toCancel = myRes.get(choice - 1);
                 
-                // Triggers your specific logic: refund, status change, and availability
+                
                 toCancel.cancel();
                 
-                // Remove it from the master database
+                
                 HotelDatabase.reservations.remove(toCancel);
             }
         }
@@ -208,48 +217,12 @@ else if (act == 2) { // View and Cancel Reservations
                 System.out.print("Enter amount to add: ");
                 double amount = scanner.nextDouble(); scanner.nextLine();
                 currentGuest.topUpBalance(amount);
-            } else if (act == 4) { 
-                System.out.println("\n--- Request Extra Amenities ---");
-                Reservation activeRes = null;
-                for (Reservation res : HotelDatabase.reservations) {
-                    if (res.getGuest().getUsername().equals(currentGuest.getUsername()) && res.getStatus() != Reservation.ReservationStatus.CANCELLED) {
-                        System.out.println(res.getReservationId() + " -> Room " + res.getRoom().getRoomNumber());
-                        activeRes = res; 
-                        break;
-                    }
-                }
-
-                if (activeRes == null) {
-                    System.out.println("You have no active reservations to upgrade.");
-                    continue;
-                }
-
-                boolean isSuite = activeRes.getRoom().getRoomType().getTypeName().toLowerCase().contains("suite");
-                
-                System.out.println("1. Add Extra Bed");
-                if (!isSuite) System.out.println("2. Add Unlimited WiFi (+$50)");
-                System.out.print("Choice: ");
-                int amChoice = scanner.nextInt(); scanner.nextLine();
-
-                if (amChoice == 1) {
-                    double bedPrice = isSuite ? 50.0 : 100.0; 
-                    if (currentGuest.canAfford(bedPrice)) {
-                        currentGuest.deductBalance(bedPrice);
-                        activeRes.addExtraAmenity(new Amenity("Extra Bed"));
-                        System.out.println("Extra Bed added! Charged $" + bedPrice);
-                    } else { System.out.println("Insufficient funds!"); }
-                } else if (amChoice == 2 && !isSuite) {
-                    if (currentGuest.canAfford(50.0)) {
-                        currentGuest.deductBalance(50.0);
-                        activeRes.addExtraAmenity(new Amenity("Unlimited WiFi"));
-                        System.out.println("Unlimited WiFi added! Charged $50.0");
-                    } else { System.out.println("Insufficient funds!"); }
-                } else {
-                    System.out.println("Invalid choice or already included in Suite.");
-                }
+            } 
+            else if (act == 4) { 
+               currentGuest.requestExtraAmenities(scanner);
             }
-        }
     }
+}
 
 
     private static void handleAdmin(String user, String pass, Scanner scanner) {

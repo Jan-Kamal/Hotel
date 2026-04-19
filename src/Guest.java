@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Guest  {
 
@@ -116,5 +117,67 @@ public class Guest  {
                 ", roomPreferences=" + roomPreferences +
                 '}';
     }
+   public void requestExtraAmenities(Scanner scanner) {
+    System.out.println("\n--- Request Extra Amenities ---");
     
+    
+    ArrayList<Reservation> guestActiveRes = new ArrayList<>();
+    for (Reservation res : HotelDatabase.reservations) {
+        
+        if (res.getGuest().equals(this) && 
+            res.getStatus() != Reservation.ReservationStatus.CANCELLED) {
+            guestActiveRes.add(res);
+        }
+    }
+
+    if (guestActiveRes.isEmpty()) {
+        System.out.println("You have no active reservations to upgrade.");
+        return; 
+    }
+
+    
+    Reservation activeRes = null;
+    if (guestActiveRes.size() == 1) {
+        activeRes = guestActiveRes.get(0);
+        System.out.println("Upgrading Room: " + activeRes.getRoom().getRoomNumber());
+    } else {
+        System.out.println("You have multiple reservations. Which one do you want to upgrade?");
+        for (int i = 0; i < guestActiveRes.size(); i++) {
+            Reservation r = guestActiveRes.get(i);
+            System.out.println(i + ". Room " + r.getRoom().getRoomNumber() + " (" + r.getRoom().getRoomType().getTypeName() + ")");
+        }
+        System.out.print("Choice: ");
+        int choice = scanner.nextInt(); scanner.nextLine();
+        
+        if (choice >= 0 && choice < guestActiveRes.size()) {
+            activeRes = guestActiveRes.get(choice);
+        } else {
+            System.out.println("Invalid selection.");
+            return;
+        }
+    }
+
+    
+    boolean isSuite = activeRes.getRoom().getRoomType().getTypeName().toLowerCase().contains("suite");
+    
+    System.out.println("1. Add Extra Bed");
+    if (!isSuite) System.out.println("2. Add Unlimited WiFi (+$50)");
+    System.out.print("Choice: ");
+    int amChoice = scanner.nextInt(); scanner.nextLine();
+
+    if (amChoice == 1) {
+        double bedPrice = isSuite ? 50.0 : 100.0; 
+        if (this.canAfford(bedPrice)) { 
+            this.deductBalance(bedPrice);
+            activeRes.addExtraAmenity(new Amenity("Extra Bed"));
+            System.out.println("Extra Bed added! Charged $" + bedPrice);
+        } else { System.out.println("Insufficient funds!"); }
+    } else if (amChoice == 2 && !isSuite) {
+        if (this.canAfford(50.0)) {
+            this.deductBalance(50.0);
+            activeRes.addExtraAmenity(new Amenity("Unlimited WiFi"));
+            System.out.println("Unlimited WiFi added! Charged $50.0");
+        } else { System.out.println("Insufficient funds!"); }
+    }
+}
 }

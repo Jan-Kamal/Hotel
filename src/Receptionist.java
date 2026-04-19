@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 
@@ -17,10 +18,18 @@ public class Receptionist extends Staff {
         System.out.println("Receptionist " + getUsername() + " is managing check-ins and check-outs.");
     }
     public static String askForDate(String label, Scanner scan) {
-    System.out.print("Please enter " + label + " Date (YYYY-MM-DD): ");
-    return scan.nextLine();
+    while (true) {
+        System.out.print("Please enter " + label + " Date (YYYY-MM-DD): ");
+        String input = scan.nextLine();
+        try {
+            // We try to parse it just to see if it's valid
+            LocalDate.parse(input); 
+            return input; // If valid, return the string
+        } catch (DateTimeParseException e) {
+            System.out.println("\n[ERROR]: Invalid format! Please use YYYY-MM-DD (e.g., 2026-06-06).");
+        }
+    }
 }
-
     public void checkIn(Reservation reservation) {
       
         if (reservation.getStatus() == Reservation.ReservationStatus.PENDING) {
