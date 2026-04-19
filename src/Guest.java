@@ -180,4 +180,151 @@ public class Guest  {
         } else { System.out.println("Insufficient funds!"); }
     }
 }
+ public void ReserveRoom(Scanner scanner){
+System.out.print("Preferred Room Type (e.g., Suite, Single): ");
+    String typePref = scanner.nextLine();
+    System.out.print("Preferred View (e.g., Sea View, Pool View): ");
+    String viewPref = scanner.nextLine();
+
+  
+
+    if (!this.getRoomPreferences().contains(viewPref)) {
+        this.getRoomPreferences().add(viewPref);
+    }
+
+    boolean autoReserved = false;
+    
+    
+    for (Room r : HotelDatabase.rooms) {
+        if (r.isAvailable() && 
+            r.getRoomType().getTypeName().equalsIgnoreCase(typePref) && 
+            r.getViewPreference().equalsIgnoreCase(viewPref)) {
+            
+            System.out.println("\n>>> PERFECT MATCH FOUND! <<<");
+            
+            if (this.canAfford(r.getPrice())) {
+    
+                System.out.println("Select Payment Method: 1.CASH 2.CREDIT_CARD 3.ONLINE");
+                int pChoice = scanner.nextInt(); scanner.nextLine();
+                Invoice.PaymentMethod m = (pChoice == 1) ? Invoice.PaymentMethod.CASH : 
+                                         (pChoice == 2) ? Invoice.PaymentMethod.CREDIT_CARD : 
+                                         Invoice.PaymentMethod.ONLINE;
+
+                
+                LocalDate checkIn = null;
+                LocalDate checkOut = null;
+                while (true) {
+                    checkIn = LocalDate.parse(Receptionist.askForDate("Check In", scanner));
+                    checkOut = LocalDate.parse(Receptionist.askForDate("Check Out", scanner));
+
+                    if (checkOut.isAfter(checkIn)) break; 
+                    System.out.println("\n[ERROR]: Check-out must be after Check-in! Try again.");
+                }
+
+                
+                this.deductBalance(r.getPrice());
+                Invoice inv = new Invoice(r.getPrice(), m);
+                Reservation res = new Reservation(this, r, checkIn, checkOut);
+                
+                HotelDatabase.reservations.add(res);
+                r.setAvailable(false); 
+                
+                System.out.println("\n--- AUTO-RESERVATION CONFIRMED ---");
+                inv.printReceipt();
+                autoReserved = true;
+            } else {
+                System.out.println("Match found, but you have insufficient funds.");
+            }
+            break; 
+        }
+    }
+
+    
+    if (!autoReserved) {
+        System.out.println("\nNo exact match could be auto-reserved. Available options:");
+        for (Room r : HotelDatabase.rooms) {
+            if (r.isAvailable()) System.out.println(r);
+        }
+        
+        System.out.print("Enter Room Number to manually reserve (or 'exit'): ");
+        String rNum = scanner.nextLine();
+        if (rNum.equalsIgnoreCase("exit")) return;
+
+        for (Room r : HotelDatabase.rooms) {
+            if (r.getRoomNumber().equalsIgnoreCase(rNum) && r.isAvailable()) {
+                if (this.canAfford(r.getPrice())) {
+                    
+                    System.out.println("Select Payment Method: 1.CASH 2.CREDIT_CARD 3.ONLINE");
+                    int pChoice = scanner.nextInt(); scanner.nextLine();
+                    Invoice.PaymentMethod m = (pChoice == 1) ? Invoice.PaymentMethod.CASH : 
+                                             (pChoice == 2) ? Invoice.PaymentMethod.CREDIT_CARD : 
+                                             Invoice.PaymentMethod.ONLINE;
+
+                    
+                    LocalDate checkIn = null;
+                    LocalDate checkOut = null;
+                    while (true) {
+                        checkIn = LocalDate.parse(Receptionist.askForDate("Check In", scanner));
+                        checkOut = LocalDate.parse(Receptionist.askForDate("Check Out", scanner));
+
+                        if (checkOut.isAfter(checkIn)) break;
+                        System.out.println("\n[ERROR]: Check-out must be after Check-in! Try again.");
+                    }
+
+                    this.deductBalance(r.getPrice());
+                    Invoice inv = new Invoice(r.getPrice(), m);
+                    Reservation res = new Reservation(this, r, checkIn, checkOut);
+                    
+                    HotelDatabase.reservations.add(res);
+                    r.setAvailable(false); 
+                    
+                    System.out.println("\n--- MANUAL RESERVATION CONFIRMED ---");
+                    inv.printReceipt();
+                } else {
+                    System.out.println("Insufficient funds!");
+                }
+                break;
+            }
+        }
+    }
+    }
+    public void View_CancelReservation(Scanner scanner)
+    {
+        if (HotelDatabase.reservations.isEmpty()) {
+        System.out.println("No reservations found in the system.");
+    } else {
+        
+        ArrayList<Reservation> myRes = new ArrayList<>();
+        for (Reservation res : HotelDatabase.reservations) {
+            if (res.getGuest().equals(this)) {
+                myRes.add(res);
+            }
+        }
+
+        if (myRes.isEmpty()) {
+            System.out.println("You have no active reservations.");
+        } else {
+            
+            System.out.println("\n--- Your Reservations ---");
+            for (int i = 0; i < myRes.size(); i++) {
+                System.out.println((i + 1) + ". " + myRes.get(i).toString());
+            }
+
+            
+            System.out.print("\nEnter number to CANCEL (or 0 to go back): ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); 
+
+            if (choice > 0 && choice <= myRes.size()) {
+                Reservation toCancel = myRes.get(choice - 1);
+                
+                
+                toCancel.cancel();
+                
+                
+                HotelDatabase.reservations.remove(toCancel);
+            }
+        }
+    }
+    }
 }

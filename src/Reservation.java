@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.UUID;
 
 public class Reservation {
@@ -44,6 +45,9 @@ public class Reservation {
 
     public void addExtraAmenity(Amenity amenity) {
         extraAmenities.add(amenity);
+    }
+    public void ReserveRoom(Scanner scanner){
+
     }
 
     public String getReservationId() { return reservationId; }
