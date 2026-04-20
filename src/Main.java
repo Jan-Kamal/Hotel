@@ -165,7 +165,7 @@ else if (act == 2) {
             int act = scanner.nextInt(); scanner.nextLine();
             if (act == 4) break;
 
-            if (act == 1) {
+           else if (act == 1) {
                 System.out.print("Enter Reservation ID to Check-In: ");
 String id = scanner.nextLine();
 

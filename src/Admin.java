@@ -33,6 +33,8 @@ public void viewAllData() {
         for (Guest g : HotelDatabase.guests) {
            System.out.println(g);
     }
+}
+    
 
     
     System.out.println("\n--- HOTEL ROOMS ---");
@@ -54,7 +56,7 @@ public void viewAllData() {
         }
     }       
 }
-}
+
 
 public void updateRoomPrice(String roomNum, double newPrice) {
     try {
@@ -92,17 +94,8 @@ public void deleteRoom(String roomNum) {
         System.out.println("Error: Room not found.");
     }
 }
-public void updateRoomType(String roomNum, RoomType newType) {
-    for (Room r : HotelDatabase.rooms) {
-        if (r.getRoomNumber().equalsIgnoreCase(roomNum)) {
-            r.setRoomType(newType);
-            System.out.println("Success: Room " + roomNum + " is now a " + newType.getTypeName());
-            return;
-        }
-    }
-}
+
 public void handleRoomTypeUpdate(Scanner scanner) {
-    // 1. Check if there are even any rooms to update
     if (HotelDatabase.rooms.isEmpty()) {
         System.out.println("Error: There are no rooms in the system to change.");
         return; 
@@ -111,7 +104,6 @@ public void handleRoomTypeUpdate(Scanner scanner) {
     System.out.print("Enter Room Number to change its type: ");
     String rNum = scanner.nextLine();
     
-    // Find the room first to see what its CURRENT type is
     Room foundRoom = null;
     for (Room r : HotelDatabase.rooms) {
         if (r.getRoomNumber().equalsIgnoreCase(rNum)) {
