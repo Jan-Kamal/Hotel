@@ -1,24 +1,26 @@
 import java.time.LocalDate;
 
+
 public class Invoice {
     public enum PaymentMethod { CASH, CREDIT_CARD, ONLINE }
 
     private double amount;
     private PaymentMethod method;
-    private LocalDate date;
+    private LocalDate checkInDate; 
 
-    public Invoice(double amount, PaymentMethod method) {
+ 
+    public Invoice(double amount, PaymentMethod method, LocalDate checkIn) {
         this.amount = amount;
         this.method = method;
-        this.date = LocalDate.now();
+        this.checkInDate = checkIn;
     }
 
     public void printReceipt() {
         System.out.println("\n------- PAYMENT RECEIPT -------");
-        System.out.println("Check In Date: " + date);
+        System.out.println("Check In Date: " + checkInDate);
         System.out.println("Total Paid: $" + amount);
         System.out.println("Method Used: " + method);
         System.out.println("Status: COMPLETED");
-        System.out.println("--------------------------------");
+        System.out.println("-------------------------------");
     }
 }

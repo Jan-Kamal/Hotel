@@ -33,19 +33,7 @@ public abstract class Staff {
     }
  
  
-    public void viewAllGuests() {
-        System.out.println("[" + role + "] " + username + " is viewing all guests...");
-       
-    }
- 
-    public void viewAllRooms() {
-        System.out.println("[" + role + "] " + username + " is viewing all rooms...");
-        
-    }
- 
-    public void viewAllReservations() {
-        System.out.println("[" + role + "] " + username + " is viewing all reservations...");
-    }
+    
  
     public boolean login(String username, String password) {
         if (this.username.equals(username) && this.password.equals(password)) {

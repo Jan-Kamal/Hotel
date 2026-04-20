@@ -28,7 +28,7 @@ public class Main {
                  System.out.print("Password: ");
                  String pass = scanner.nextLine();
                 handleGuest(user, pass, scanner);}
-            if(choice==2) try {HotelDatabase.registerNewGuest(scanner);}
+     else if(choice==2) try {HotelDatabase.registerNewGuest(scanner);}
             catch(IllegalArgumentException e){
                 System.out.println("\n[ERROR]: " + e.getMessage());
                  System.out.println("Please try registering again with a valid password.");
@@ -165,7 +165,7 @@ else if (act == 2) {
             int act = scanner.nextInt(); scanner.nextLine();
             if (act == 4) break;
 
-           else if (act == 1) {
+              if (act == 1) {
                 System.out.print("Enter Reservation ID to Check-In: ");
 String id = scanner.nextLine();
 

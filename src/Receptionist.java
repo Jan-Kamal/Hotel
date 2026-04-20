@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 
 public class Receptionist extends Staff {
-    private LocalDate date;
 
     
     public Receptionist(String username, String password,

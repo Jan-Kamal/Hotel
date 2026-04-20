@@ -211,7 +211,7 @@ System.out.print("Preferred Room Type (e.g., Suite, Single): ");
 
                 
                 this.deductBalance(r.getPrice());
-                Invoice inv = new Invoice(r.getPrice(), m);
+               Invoice inv = new Invoice(r.getPrice(), m, checkIn);
                 Reservation res = new Reservation(this, r, checkIn, checkOut);
                 
                 HotelDatabase.reservations.add(res);
@@ -260,7 +260,7 @@ System.out.print("Preferred Room Type (e.g., Suite, Single): ");
                     }
 
                     this.deductBalance(r.getPrice());
-                    Invoice inv = new Invoice(r.getPrice(), m);
+                    Invoice inv = new Invoice(r.getPrice(), m, checkIn);
                     Reservation res = new Reservation(this, r, checkIn, checkOut);
                     
                     HotelDatabase.reservations.add(res);
