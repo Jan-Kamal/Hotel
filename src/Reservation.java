@@ -60,4 +60,5 @@ public class Reservation {
         return "Reservation{id='" + reservationId + "', room=" + room.getRoomNumber() + 
                ", status=" + status + ", extras=" + extraAmenities + "}";
     }
+
 }

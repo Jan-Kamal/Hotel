@@ -167,20 +167,25 @@ else if (act == 2) {
 
             if (act == 1) {
                 System.out.print("Enter Reservation ID to Check-In: ");
-                String id = scanner.nextLine();
-                for (Reservation res : HotelDatabase.reservations) {
-                    if (res.getReservationId().equals(id)) {
-                        res.confirm(); 
-                        break;
-                    }
-                }
-            } else if (act == 2) {
-                System.out.println("\n--- ALL RESERVATIONS IN SYSTEM ---");
-                for (Reservation res : HotelDatabase.reservations) {
-                    System.out.println(res);
-                }
-            
+String id = scanner.nextLine();
+
+boolean found = false;
+for (Reservation res : HotelDatabase.reservations) {
+    if (res.getReservationId().equalsIgnoreCase(id)) {
+        
+        currentRec.checkIn(res); 
+        found = true;
+        break;
+    }
+}
+
+if (!found) {
+    System.out.println("[ERROR]: No reservation found with ID: " + id);
+}
             }
+                else if (act == 2) { 
+                    currentRec.viewAReservations();
+                }
             else if(act == 3){
                 System.out.print("Enter Reservation ID to Check-Out: ");
             String id = scanner.nextLine();

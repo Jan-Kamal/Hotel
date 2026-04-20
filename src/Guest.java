@@ -53,18 +53,6 @@ public class Guest  {
         return false;
     }
 
-    public void viewAvailableRooms() {
-        System.out.println(username + " is viewing available rooms...");
-        
-    }
-
-    
-    public void makeReservation(String roomNumber, LocalDate checkIn, LocalDate checkOut) {
-        System.out.println(username + " made a reservation for room " + roomNumber
-                + " from " + checkIn + " to " + checkOut);
-        
-    }
-
     
    public boolean canAfford(double amount) {
         return this.balance >= amount;
@@ -288,12 +276,10 @@ System.out.print("Preferred Room Type (e.g., Suite, Single): ");
         }
     }
     }
-    public void View_CancelReservation(Scanner scanner)
-    {
-        if (HotelDatabase.reservations.isEmpty()) {
+   public void View_CancelReservation(Scanner scanner) {
+    if (HotelDatabase.reservations.isEmpty()) {
         System.out.println("No reservations found in the system.");
     } else {
-        
         ArrayList<Reservation> myRes = new ArrayList<>();
         for (Reservation res : HotelDatabase.reservations) {
             if (res.getGuest().equals(this)) {
@@ -304,16 +290,23 @@ System.out.print("Preferred Room Type (e.g., Suite, Single): ");
         if (myRes.isEmpty()) {
             System.out.println("You have no active reservations.");
         } else {
-            
             System.out.println("\n--- Your Reservations ---");
             for (int i = 0; i < myRes.size(); i++) {
                 System.out.println((i + 1) + ". " + myRes.get(i).toString());
             }
 
-            
             System.out.print("\nEnter number to CANCEL (or 0 to go back): ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); 
+            
+         
+            int choice = -1; 
+            try {
+                String input = scanner.nextLine();
+                choice = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("\n[ERROR]: Please enter a valid number (e.g. 1, 2), not text.");
+                return;
+            }
+        
 
             if (choice > 0 && choice <= myRes.size()) {
                 Reservation toCancel = myRes.get(choice - 1);
@@ -323,8 +316,11 @@ System.out.print("Preferred Room Type (e.g., Suite, Single): ");
                 
                 
                 HotelDatabase.reservations.remove(toCancel);
+                System.out.println("Reservation removed from system.");
+            } else if (choice != 0) {
+                System.out.println("Invalid selection.");
             }
         }
     }
-    }
+}
 }

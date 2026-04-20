@@ -45,9 +45,21 @@ public void checkOut(Reservation reservation) {
     System.out.println("Receptionist " + getUsername() +
             " is checking out guest: " + reservation.getGuest().getUsername());
     reservation.getRoom().setAvailable(true);
-    System.out.println("date of checkout:" + date);
     System.out.println("Check-out complete for ID: " + reservation.getReservationId());
     
+    }
+    public void viewAReservations(){
+        System.out.println("\n--- ALL HOTEL RESERVATIONS ---");
+    
+    if (HotelDatabase.reservations.isEmpty()) {
+        System.out.println("No reservations found in the system.");
+    } else {
+        
+        for (Reservation res : HotelDatabase.reservations) {
+            System.out.println(res); 
+            System.out.println("-----------------------------------");
+        }
+    }
     }
    
 }
