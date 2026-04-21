@@ -21,9 +21,9 @@ public class Receptionist extends Staff {
         System.out.print("Please enter " + label + " Date (YYYY-MM-DD): ");
         String input = scan.nextLine();
         try {
-            // We try to parse it just to see if it's valid
+           
             LocalDate.parse(input); 
-            return input; // If valid, return the string
+            return input;
         } catch (DateTimeParseException e) {
             System.out.println("\n[ERROR]: Invalid format! Please use YYYY-MM-DD (e.g., 2026-06-06).");
         }

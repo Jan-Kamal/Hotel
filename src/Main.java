@@ -48,7 +48,7 @@ public class Main {
                     System.out.print("Username: ");
                      String user = scanner.nextLine();
                      System.out.print("Password: ");
-                     String pass = scanner.nextLine();
+                     String pass = scanner.nextLine();  
                     handleAdmin(user, pass, scanner);}
             else if (choice == 4){
                 System.out.print("Username: ");

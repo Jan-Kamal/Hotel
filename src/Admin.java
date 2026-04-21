@@ -52,7 +52,7 @@ public void viewAllData() {
         System.out.println("No reservations made yet.");
     } else {
         for (Reservation res : HotelDatabase.reservations) {
-            System.out.println(res); // This uses the toString() you already have in Reservation
+            System.out.println(res); 
         }
     }       
 }
@@ -117,11 +117,11 @@ public void handleRoomTypeUpdate(Scanner scanner) {
         return;
     }
 
-    // 2. Show available types EXCLUDING the current one
+   
     System.out.println("Available New Types (Current: " + foundRoom.getRoomType().getTypeName() + "):");
     boolean otherTypesExist = false;
     for (RoomType rt : HotelDatabase.roomTypes) {
-        // ONLY show types that are different from the current one
+      
         if (!rt.getTypeName().equalsIgnoreCase(foundRoom.getRoomType().getTypeName())) {
             System.out.println("- " + rt.getTypeName());
             otherTypesExist = true;
@@ -218,7 +218,7 @@ public void updateAmenity(Scanner sc) {
         return;
     }
 
-    // Show list for selection
+    
     for (int i = 0; i < HotelDatabase.amenitys.size(); i++) {
         System.out.println((i + 1) + ". " + HotelDatabase.amenitys.get(i).getName());
     }
@@ -266,7 +266,7 @@ public void createRoom(Scanner scanner) {
         System.out.print("Room Number: ");
         String num = scanner.nextLine();
 
-        // Check if room exists [cite: 73]
+   
         for (Room r : HotelDatabase.rooms) {
             if (r.getRoomNumber().equalsIgnoreCase(num)) {
                 System.out.println("Error: Room " + num + " already exists!");
@@ -291,7 +291,7 @@ public void createRoom(Scanner scanner) {
             if (typeChoice >= 0 && typeChoice < HotelDatabase.roomTypes.size()) {
                 RoomType selectedType = HotelDatabase.roomTypes.get(typeChoice);
                 
-                // This triggers validation in the Room setter 
+               
                 Room newRoom = new Room(num, selectedType, price, view); 
                 
                 HotelDatabase.rooms.add(newRoom);

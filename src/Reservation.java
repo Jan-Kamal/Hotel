@@ -12,8 +12,7 @@ public class Reservation {
     private String reservationId;
     private Guest guest;
     private Room room;
-    private LocalDate checkInDate;
-    private LocalDate checkOutDate;
+    
     private ReservationStatus status;
     private List<Amenity> extraAmenities;
 
@@ -21,8 +20,6 @@ public class Reservation {
         this.reservationId = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         this.guest = guest;
         this.room = room;
-        this.checkInDate = checkInDate;
-        this.checkOutDate = checkOutDate;
         this.status = ReservationStatus.PENDING; 
         this.extraAmenities = new ArrayList<>();
         room.setAvailable(false);
