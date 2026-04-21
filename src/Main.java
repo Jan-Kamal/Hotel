@@ -28,11 +28,21 @@ public class Main {
                  System.out.print("Password: ");
                  String pass = scanner.nextLine();
                 handleGuest(user, pass, scanner);}
-     else if(choice==2) try {HotelDatabase.registerNewGuest(scanner);}
-            catch(IllegalArgumentException e){
-                System.out.println("\n[ERROR]: " + e.getMessage());
-                 System.out.println("Please try registering again with a valid password.");
-            }
+   else if (choice == 2) {
+    try {
+        HotelDatabase.registerNewGuest(scanner);
+    } 
+    catch (NegativeBalanceException e) {
+       
+        System.out.println("\n[BALANCE ERROR]: " + e.getMessage());
+        System.out.println("Please provide a valid starting balance to register.");
+    } 
+    catch (IllegalArgumentException e) {
+        
+        System.out.println("\n[SECURITY ERROR]: " + e.getMessage());
+        System.out.println("Please try again with a password at least 6 characters long.");
+    }
+}
             else if (choice == 3)
                 { 
                     System.out.print("Username: ");

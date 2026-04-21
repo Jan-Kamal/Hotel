@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Guest  {
+public class Guest implements Payable {
 
     public enum Gender {
         MALE, FEMALE
@@ -18,11 +18,11 @@ public class Guest  {
     private List<String> roomPreferences;
 
     public Guest(String username, String password, LocalDate dateOfBirth,
-                 double balance, String address, Gender gender) {
+                 double balance, String address, Gender gender) throws NegativeBalanceException {
         this.username = username;
         this.password = validatePassword(password);
         this.dateOfBirth = dateOfBirth;
-        this.balance = balance;
+        setBalance(balance);
         this.address = address;
         this.gender = gender;
         this.roomPreferences = new ArrayList<>();
@@ -36,14 +36,6 @@ public class Guest  {
     }
 
 
-    
-    public static Guest register(String username, String password, LocalDate dob,
-                                  double balance, String address, Gender gender) {
-        System.out.println("Guest registered: " + username);
-        return new Guest(username, password, dob, balance, address, gender);
-    }
-
-
     public boolean login(String username, String password) {
         if (this.username.equals(username) && this.password.equals(password)) {
             System.out.println("Login successful. Welcome, " + this.username + "!");
@@ -53,11 +45,11 @@ public class Guest  {
         return false;
     }
 
-    
+    @Override
    public boolean canAfford(double amount) {
         return this.balance >= amount;
     }
-
+@Override
     public void deductBalance(double amount) {
         this.balance -= amount;
     }
@@ -82,7 +74,12 @@ public class Guest  {
     public void setDateOfBirth(LocalDate dateOfBirth) { this.dateOfBirth = dateOfBirth; }
 
     public double getBalance() { return balance; }
-    public void setBalance(double balance) { this.balance = balance; }
+    public void setBalance(double balance) throws NegativeBalanceException {
+    if (balance < 0) {
+        throw new NegativeBalanceException("Balance cannot be negative.");
+    }
+    this.balance = balance;
+}
 
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
