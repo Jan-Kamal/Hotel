@@ -30,7 +30,7 @@ public class Main {
                 handleGuest(user, pass, scanner);}
    else if (choice == 2) {
     try {
-        HotelDatabase.registerNewGuest(scanner);
+        Guest.registerNewGuest(scanner);
     } 
     catch (NegativeBalanceException e) {
        

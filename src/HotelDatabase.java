@@ -1,6 +1,5 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class HotelDatabase {
     public static ArrayList<Guest> guests = new ArrayList<>();
@@ -23,38 +22,5 @@ public class HotelDatabase {
     }
 }
 
-public static void registerNewGuest(Scanner scanner)throws NegativeBalanceException {
-    System.out.println("Please enter your name:");
-    String name = scanner.nextLine();
-
-    System.out.println("Enter your password:");
-    String p = scanner.nextLine();
-
-    System.out.println("Your Initial Balance:");
-    double bal = scanner.nextDouble();
-    scanner.nextLine();
-
-    System.out.println("Address:");
-    String addr = scanner.nextLine();
-
-
-    Guest.Gender gender = null;
-    while (gender == null) {
-        System.out.println("Gender (1. MALE / 2. FEMALE):");
-        String gChoice = scanner.nextLine().trim();
-        if (gChoice.equals("1") || gChoice.equalsIgnoreCase("MALE")) {
-            gender = Guest.Gender.MALE;
-        } else if (gChoice.equals("2") || gChoice.equalsIgnoreCase("FEMALE")) {
-            gender = Guest.Gender.FEMALE;
-        } else {
-            System.out.println("[ERROR]: Please enter 1 for MALE or 2 for FEMALE.");
-        }
-    }
-
-    Guest newGuest = new Guest(name, p, LocalDate.now(), bal, addr, gender);
-    guests.add(newGuest);
-    System.out.println("Registration successful! Welcome, " + name + "!");
-
-}
 }
 
