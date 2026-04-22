@@ -70,7 +70,18 @@ public class Main {
         while (true) {
             System.out.println("\n--- Guest Menu (" + currentGuest.getUsername() + ") | Balance: $" + currentGuest.getBalance() + " ---");
             System.out.println("1. Search & Reserve Rooms\n2. View/Cancel My Reservations\n3. Top-Up Balance\n4. Request Extra Amenities\n5. Logout");
-            int act = scanner.nextInt(); scanner.nextLine();
+            int act=-1;
+                System.out.print("Choice: ");
+            try {
+            act = scanner.nextInt(); 
+            scanner.nextLine(); 
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("\n[INPUT ERROR]: Please enter a valid number, not text.");
+            scanner.nextLine();
+            continue;
+        }
+
+
 
             if (act == 5) break;
 
@@ -82,10 +93,16 @@ else if (act == 2) {
     currentGuest.View_CancelReservation(scanner);  
 }
              else if (act == 3) { 
+               try {
                 System.out.print("Enter amount to add: ");
-                double amount = scanner.nextDouble(); scanner.nextLine();
+                double amount = scanner.nextDouble(); 
+                scanner.nextLine();
                 currentGuest.topUpBalance(amount);
-            } 
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("\n[INPUT ERROR]: Please enter a valid number for the amount.");
+                scanner.nextLine();
+            }
+        }
             else if (act == 4) { 
                currentGuest.requestExtraAmenities(scanner);
             }
@@ -103,7 +120,16 @@ else if (act == 2) {
         while (true) {
             System.out.println("\n--- Admin Menu ---");
             System.out.println("1. Create Room Type\n2. Create Room (With Price & View)\n3. View All Data (Includes Reservations)\n4.Update room Price \n5.Delete Room \n6.Update RoomType \n7.assigen amenities to rooms\n8.create amenity \n9.update amenity\n10.Delete amenity \n0. Logout");
-            int act = scanner.nextInt(); scanner.nextLine();
+                int act=-1;
+                System.out.print("Choice: ");
+            try {
+            act = scanner.nextInt();
+            scanner.nextLine();
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("\n[INPUT ERROR]: Please enter a valid number, not text.");
+                scanner.nextLine();
+                continue;
+            }
             if (act == 0) return;
 
             if (act == 1) {
@@ -125,9 +151,17 @@ else if (act == 2) {
                 System.out.print("Enter Room Number to update: ");
         String rNum = scanner.nextLine();
         System.out.print("Enter New Price: ");
-        double nPrice = scanner.nextDouble(); scanner.nextLine();
-    
-        currentAdmin.updateRoomPrice(rNum, nPrice);
+        try {
+            double nPrice = scanner.nextDouble(); 
+            scanner.nextLine();
+            
+            
+            currentAdmin.updateRoomPrice(rNum, nPrice); 
+            
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("\n[INPUT ERROR]: Price must be a valid number (e.g., 150.50).");
+            scanner.nextLine();
+        }
             }
         }
             else if (act==5){
@@ -172,7 +206,15 @@ else if (act == 2) {
         while (true) {
             System.out.println("\n--- Receptionist Menu ---");
             System.out.println("1. Check-In Guest (Confirm Reservation)\n2. View All Reservations\n3.CheckOut\n4. Logout");
-            int act = scanner.nextInt(); scanner.nextLine();
+            int act=-1;
+            System.out.print("Choice: ");
+            try {
+                act = scanner.nextInt();
+                scanner.nextLine();
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("\n[INPUT ERROR]: Please enter a valid number, not text.");
+                scanner.nextLine();
+            }
             if (act == 4) break;
 
               if (act == 1) {
