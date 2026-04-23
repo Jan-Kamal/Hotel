@@ -297,9 +297,9 @@ System.out.print("Preferred Room Type (e.g., Suite, Single): ");
          
             int choice = -1; 
             try {
-                String input = scanner.nextLine();
-                choice = Integer.parseInt(input);
-            } catch (NumberFormatException e) {
+                 choice = scanner.nextInt();
+                scanner.nextLine();
+            } catch (java.util.InputMismatchException e) {
                 System.out.println("\n[ERROR]: Please enter a valid number (e.g. 1, 2), not text.");
                 return;
             }
@@ -328,9 +328,23 @@ public static void registerNewGuest(Scanner scanner)throws NegativeBalanceExcept
     String p = scanner.nextLine();
 
     System.out.println("Your Initial Balance:");
-    double bal = scanner.nextDouble();
-    scanner.nextLine();
-
+    double bal = 0.0;
+    boolean validBalance = false;
+    while (!validBalance) {
+    try {
+         bal = scanner.nextDouble();
+            scanner.nextLine();
+            if(bal<0) {
+                throw new NegativeBalanceException("Initial balance cannot be negative.");
+            }
+            validBalance = true;
+    } catch (java.util.InputMismatchException e) {
+        System.out.println("\n[INPUT ERROR]: Please enter a valid number for balance, not text.");
+        scanner.nextLine();
+    } catch (NegativeBalanceException e) {
+        System.out.println("\n[ERROR]: " + e.getMessage());
+    }
+}
     System.out.println("Address:");
     String addr = scanner.nextLine();
 
