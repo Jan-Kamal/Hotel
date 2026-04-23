@@ -29,19 +29,7 @@ public class Main {
                  String pass = scanner.nextLine();
                 handleGuest(user, pass, scanner);}
    else if (choice == 2) {
-    try {
-        Guest.registerNewGuest(scanner);
-    } 
-    catch (NegativeBalanceException e) {
-       
-        System.out.println("\n[BALANCE ERROR]: " + e.getMessage());
-        System.out.println("Please provide a valid starting balance to register.");
-    } 
-    catch (IllegalArgumentException e) {
-        
-        System.out.println("\n[SECURITY ERROR]: " + e.getMessage());
-        System.out.println("Please try again with a password at least 6 characters long.");
-    }
+    Guest.registerNewGuest(scanner);
 }
             else if (choice == 3)
                 { 

@@ -320,7 +320,8 @@ System.out.print("Preferred Room Type (e.g., Suite, Single): ");
         }
     }
 }
-public static void registerNewGuest(Scanner scanner)throws NegativeBalanceException {
+public static void registerNewGuest(Scanner scanner) {
+
     System.out.println("Please enter your name:");
     String name = scanner.nextLine();
 
@@ -331,23 +332,21 @@ public static void registerNewGuest(Scanner scanner)throws NegativeBalanceExcept
     double bal = 0.0;
     boolean validBalance = false;
     while (!validBalance) {
-    try {
-         bal = scanner.nextDouble();
+        try {
+            bal = scanner.nextDouble();
             scanner.nextLine();
-            if(bal<0) {
-                throw new NegativeBalanceException("Initial balance cannot be negative.");
-            }
+            if (bal < 0) throw new NegativeBalanceException("Initial balance cannot be negative.");
             validBalance = true;
-    } catch (java.util.InputMismatchException e) {
-        System.out.println("\n[INPUT ERROR]: Please enter a valid number for balance, not text.");
-        scanner.nextLine();
-    } catch (NegativeBalanceException e) {
-        System.out.println("\n[ERROR]: " + e.getMessage());
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("[INPUT ERROR]: Please enter a valid number.");
+            scanner.nextLine();
+        } catch (NegativeBalanceException e) {
+            System.out.println("[ERROR]: " + e.getMessage());
+        }
     }
-}
+
     System.out.println("Address:");
     String addr = scanner.nextLine();
-
 
     Guest.Gender gender = null;
     while (gender == null) {
@@ -362,9 +361,14 @@ public static void registerNewGuest(Scanner scanner)throws NegativeBalanceExcept
         }
     }
 
-    Guest newGuest = new Guest(name, p, LocalDate.now(), bal, addr, gender);
-    HotelDatabase.guests.add(newGuest);
-    System.out.println("Registration successful! Welcome, " + name + "!");
-
+    try {
+        Guest newGuest = new Guest(name, p, LocalDate.now(), bal, addr, gender);
+        HotelDatabase.guests.add(newGuest);
+        System.out.println("Registration successful! Welcome, " + name + "!");
+    } catch (IllegalArgumentException e) {
+        System.out.println("[SECURITY ERROR]: " + e.getMessage());
+    } catch (NegativeBalanceException e) {
+        System.out.println("[BALANCE ERROR]: " + e.getMessage());
+    }
 }
 }
